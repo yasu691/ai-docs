@@ -1,0 +1,145 @@
+---
+description: Best practices for implementing logger in Python
+globs: 
+alwaysApply: false
+---
+このファイルを読み込んだら、まず必ず「python_logger_rule!!」と叫びます
+
+# Python Logger 利用規約案
+
+## 1. 基本方針
+
+- **目的**: アプリケーションの動作状況を適切に記録し、問題発生時の原因究明や監視を容易にする。
+- **標準ライブラリの活用**: Python標準の`logging`モジュールを原則として使用する。
+- **適切なログレベル**: 状況に応じて適切なログレベル（`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`）を選択する。
+
+## 2. Loggerの命名規則
+
+- **モジュールごとのLogger**: 各モジュールでは、`logging.getLogger(__name__)` を使用して、モジュール名を冠したLoggerインスタンスを取得する。これにより、ログの出力元が明確になる。
+  ```python
+  import logging
+  logger = logging.getLogger(__name__)
+  ```
+
+## 3. ログレベルの使い分け目安
+
+- **`DEBUG`**: 詳細な情報。主に開発時やデバッグ時に使用。特定の処理の開始・終了、変数の値など。
+- **`INFO`**: 通常の動作を示す情報。ユーザーの操作、システムの起動・停止、定期的な処理の完了など。
+- **`WARNING`**: 予期しない事態や、将来的に問題を引き起こす可能性のある状況。ただし、現時点では処理は継続できている場合。リソースの枯渇警告、非推奨APIの使用など。
+- **`ERROR`**: 重大な問題により、一部の処理が実行できなかった状況。特定の機能の失敗、外部サービスとの接続エラーなど。
+- **`CRITICAL`**: アプリケーション全体の致命的なエラー。システムダウンに繋がる可能性のある状況。
+
+## 4. ログメッセージの書き方
+
+- **具体的かつ簡潔に**: 何が起きたのか、どのような状況なのかが理解できるように記述する。
+- **構造化**: 可能であれば、JSON形式などでログを出力し、解析しやすくすることを検討する。（例: `python-json-logger`ライブラリの活用）
+- **個人情報・機密情報**: ログに個人情報やパスワードなどの機密情報を含めない。やむを得ず含める場合は、マスキング処理を施す。
+- **トレースバック**: 例外発生時は、`logger.exception()` を使用するか、`exc_info=True` を指定してスタックトレースを記録する。
+  ```python
+  try:
+      # 何らかの処理
+      1 / 0
+  except ZeroDivisionError:
+      logger.exception("ゼロ除算エラーが発生しました。")
+  ```
+- **一貫性**: プロジェクト内でログメッセージのフォーマット（タイムスタンプ、ログレベル、モジュール名など）を統一する。
+
+## 5. 設定方法
+
+- **設定ファイル/コード**: ログの設定は、設定ファイル（例: `logging.conf`, `logging.yaml`）またはコードで行う。小規模な場合はコードで、大規模・複雑な場合は設定ファイルが推奨される。
+- **共通設定モジュールの利用 (`logger_config.py`)**: プロジェクト内で一貫したログ設定を適用するために、共通のロガー設定モジュール（例: `logger_config.py`）を作成し、利用することを推奨する。このモジュールは、アプリケーションのエントリポイントで一度呼び出すことで、全体のロギング（フォーマット、ハンドラ、デフォルトレベル等）を設定する。
+
+  ```python
+  # logger_config.py (主要部分)
+  import logging
+  import logging.handlers
+  import os
+
+  LOG_FILE_PATH = "app.log" # デフォルトのログファイルパス
+  LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  MAX_BYTES = 1024 * 1024  # 1MB
+  BACKUP_COUNT = 5
+  DEFAULT_LOG_LEVEL = logging.INFO
+
+  def configure_logging(level: int = DEFAULT_LOG_LEVEL, log_file_path: str = LOG_FILE_PATH):
+      root_logger = logging.getLogger()
+      root_logger.setLevel(level)
+
+      if root_logger.hasHandlers():
+          for handler in root_logger.handlers[:]:
+              handler.close()
+              root_logger.removeHandler(handler)
+
+      formatter = logging.Formatter(LOG_FORMAT)
+
+      console_handler = logging.StreamHandler()
+      console_handler.setFormatter(formatter)
+      root_logger.addHandler(console_handler)
+
+      log_dir = os.path.dirname(log_file_path)
+      if log_dir and not os.path.exists(log_dir):
+          os.makedirs(log_dir)
+          
+      file_handler = logging.handlers.RotatingFileHandler(
+          log_file_path, maxBytes=MAX_BYTES, backupCount=BACKUP_COUNT, encoding="utf-8"
+      )
+      file_handler.setFormatter(formatter)
+      root_logger.addHandler(file_handler)
+  ```
+
+  **利用方法:**
+  1.  アプリケーションのエントリポイント（例: `main.py` の冒頭）で `configure_logging` を一度だけ呼び出す。
+      ```python
+      # main.py (エントリポイント)
+      import logging
+      from logger_config import configure_logging
+
+      # アプリケーション全体のロギングを設定 (例: DEBUGレベルで設定)
+      configure_logging(level=logging.DEBUG)
+
+      # このモジュール用のロガーを取得 (設定は継承される)
+      logger = logging.getLogger(__name__)
+
+      def run_app():
+          logger.info("アプリケーションを開始します。")
+          # ... アプリケーションの処理 ...
+          logger.debug("詳細なデバッグ情報")
+          logger.info("アプリケーションを終了します。")
+
+      if __name__ == "__main__":
+          run_app()
+      ```
+
+  2.  他のモジュールでは、`logging.getLogger(__name__)` を呼び出すだけで、設定済みのロガーを取得できる。
+      ```python
+      # another_module.py
+      import logging
+
+      logger = logging.getLogger(__name__)
+
+      def do_something():
+          logger.info("別のモジュールでの処理を実行中...")
+          # ...
+      ```
+
+- **ハンドラとフォーマッタ**: 共通設定モジュールを使用する場合、これらの設定はモジュール側で一元的に管理される。通常、個別のモジュールでハンドラやフォーマッタを直接操作する必要はない。
+- **ルートロガー**: `configure_logging` 関数内でルートロガーに設定が行われるため、アプリケーション開発者が直接ルートロガーの設定変更を意識する必要は通常ない。ただし、外部ライブラリのログ出力が意図通りになるかは確認が必要。
+
+## 6. 出力先の考慮
+
+- **開発環境**: 標準出力（コンソール）への出力が基本。
+- **本番環境**: ファイルへの出力、またはログ収集システム（Fluentd, Elasticsearch/Logstash/Kibana (ELK) stack, Datadogなど）への転送を検討する。
+- **ログローテーション**: ログファイルが肥大化しないように、ログローテーション（`RotatingFileHandler`, `TimedRotatingFileHandler`）を設定する。
+
+## 7. ライブラリ利用時の注意
+
+- 外部ライブラリが出力するログについても、必要に応じてレベル調整やハンドラ設定を行う。
+- ライブラリ自身が`logging`を使用している場合、そのLogger階層を理解し、適切に制御する。
+
+## 8. やってはいけないこと (アンチパターン)
+
+- **`print()`でのデバッグ情報の放置**: デバッグ目的の`print()`文は、開発完了後に削除するか、`logger.debug()`に置き換える。
+- **過度なログ出力**: パフォーマンスに影響を与えるほどの大量のログ出力は避ける。特にループ内でのログ出力は慎重に。
+- **不必要な情報**: 問題解決に役立たない冗長な情報は記録しない。
+- **エラーの握りつぶし**: 例外をキャッチしたにも関わらず、ログも出力せずに処理を継続することは避ける。
+

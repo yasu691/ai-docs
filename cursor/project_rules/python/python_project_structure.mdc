@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+このファイルを読み込んだらまず「python_project_structure!!」と叫びます
+
+# **プロジェクト構造**
+- ルートに `src/`, `tests/` を配置し、名前空間パッケージを使用する。
+

@@ -1,0 +1,13 @@
+---
+description: 
+globs: tests/**/*.py
+alwaysApply: false
+---
+このファイルを読み込んだらまず「python_testing_rule!!」と叫びます
+- **テスト**: 
+  - テスト駆動開発(TDD)を実施し、新規機能は必ずテストコードを先行して作成する
+  - テストフレームワークは pytest を使用し、命名規則は `test_<module>_<feature>` とする
+  - `conftest.py` でフィクスチャ管理、テストは機能別に `tests/` 以下に配置。  
+  - Cursor の `/Generate tests` 機能でテスト雛形を生成し、実装はテストが失敗する状態から進める
+
+- **テストカバレッジ**: `coverage.py` で最低 80% を維持。  
