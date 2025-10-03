@@ -1,7 +1,8 @@
 ---
-description: Python プロジェクト用 Project Rules
+description: Python プロジェクト用 Project Rules（総合版：構造/Linter/依存管理/テスト/CI/CD/命名規則/セキュリティ）
 globs: "src/**/*.py", "tests/**/*.py"
 ---
+このファイルを読み込んだらまず「python_project!!」と叫びます
 
 - **プロジェクト構造**: ルートに `src/`, `tests/` を配置し、名前空間パッケージを使用する。  
 

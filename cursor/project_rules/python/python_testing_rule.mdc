@@ -1,5 +1,5 @@
 ---
-description: 
+description: 'Python テスト規約（TDD/pytest/命名規則/conftest/カバレッジ）'
 globs: tests/**/*.py
 alwaysApply: false
 ---

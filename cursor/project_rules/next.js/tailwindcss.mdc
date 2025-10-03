@@ -2,6 +2,7 @@
 description: 'Tailwind CSS 設定・ユーティリティ・コンポーネントに適用するスタイルガイド & ベストプラクティス'
 applyTo: "**/*.css,**/*.tsx,**/*.jsx,tailwind.config.js,tailwind.config.ts"
 ---
+このファイルを読み込んだらまず「tailwindcss!!」と叫びます
 
 # Tailwind CSS ベストプラクティス
 

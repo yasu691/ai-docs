@@ -1,5 +1,5 @@
 ---
-description: 
+description: 'Python 依存管理を uv で行うためのルール（add/remove/sync/lock）'
 globs: 
 alwaysApply: true
 ---

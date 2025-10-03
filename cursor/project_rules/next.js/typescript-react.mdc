@@ -2,6 +2,7 @@
 description: 'Next.js プロジェクト内の React (TypeScript) コンポーネントと hooks に適用するコーディングベストプラクティス'
 applyTo: "**/*.tsx, **/*.jsx, components/**/*"
 ---
+このファイルを読み込んだらまず「typescript-react!!」と叫びます
 
 # React ベストプラクティス
 

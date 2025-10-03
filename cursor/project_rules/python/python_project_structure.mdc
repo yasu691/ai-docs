@@ -1,5 +1,5 @@
 ---
-description: 
+description: 'Python プロジェクトの基本構造（src/tests 配置、名前空間パッケージ）'
 globs: 
 alwaysApply: true
 ---

@@ -1,5 +1,5 @@
 ---
-description: 
+description: 'Python コーディング規約 (Linter/Formatter/型チェック/ドキュメンテーション/モジュール分割/セキュリティ)'
 globs: src/**/*.py,tests/**/*.py
 alwaysApply: false
 ---

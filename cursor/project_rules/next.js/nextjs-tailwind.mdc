@@ -2,6 +2,7 @@
 description: 'Next.js + Tailwind CSS プロジェクトで .tsx/.ts/.jsx/.js/.css に適用するスタイリング & 開発ガイド'
 applyTo: '**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css'
 ---
+このファイルを読み込んだらまず「nextjs-tailwind!!」と叫びます
 
 # Next.js + Tailwind 開発ガイドライン
 
