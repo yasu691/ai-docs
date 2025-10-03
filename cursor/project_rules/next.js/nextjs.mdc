@@ -113,10 +113,22 @@ export default async function DashboardPage() {
 
 ## 5. 一般的なベストプラクティス
 
-- TypeScript： すべてのコードにTypeScriptを使用。`tsconfig.json` で `strict` モードを有効にする。
-- Turbopack 最適化： `tsconfig.json` に `"verbatimModuleSyntax": true` を追加してデッドコード除去とビルド速度を向上。
-- ESLint： `eslint-plugin-tailwindcss` の `recommended` を有効にし、Tailwind クラス名のtypoをCIで検出。
-- ESLint & Prettier： コードスタイルとリンティングを強制。公式Next.js ESLint設定を使用。
+### Linter / Formatter
+
+- **TypeScript**: すべてのコードに TypeScript を使用。`tsconfig.json` で `strict` モードを有効にする。
+  - Turbopack 最適化: `tsconfig.json` に `"verbatimModuleSyntax": true` を追加してデッドコード除去とビルド速度を向上。
+- **Linter**: ESLint を使用し、公式 Next.js 推奨の `eslint-config-next` を適用する。
+  - `eslint-plugin-tailwindcss` の `recommended` を有効にし、Tailwind クラス名の typo を CI で検出。
+  - TypeScript プラグイン (`@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser`) を有効化。
+  - CI で `eslint . --ext .ts,.tsx` を実行し、コード品質を維持する。
+- **Formatter**: Prettier を使用し、コードスタイルを統一する。
+  - `.prettierrc` でインデント・クォート・セミコロンなどのルールを定義。
+  - `eslint-config-prettier` を導入し、ESLint とのルール競合を回避する。
+  - エディタで保存時に自動フォーマットを推奨 (`.vscode/settings.json` で設定)。
+- **代替オプション**: Biome (旧 Rome) や dprint も選択肢だが、Next.js 公式エコシステムとの統合を優先し ESLint + Prettier を推奨。
+
+### その他のベストプラクティス
+
 - 環境変数： 秘密情報は `.env.local` に保存。秘密情報をバージョン管理にコミットしない。
 - テスト： Jest、React Testing Library、またはPlaywrightを使用。すべての重要なロジックとコンポーネントのテストを作成。
 - アクセシビリティ： セマンティックHTMLとARIA属性を使用。スクリーンリーダーでテスト。

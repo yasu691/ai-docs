@@ -30,6 +30,19 @@ TypeScriptとTailwind CSSを使用した高品質なNext.jsアプリケーショ
 - 型ガードを使用した適切なエラーハンドリング
 - ランタイム型検証にはZodを使用
 
+### Linter / Formatter
+
+- **Linter**: ESLint を使用し、公式 Next.js 推奨の `eslint-config-next` を適用する。
+  - `eslint-plugin-tailwindcss` の `recommended` を有効にし、Tailwind クラス名の typo を CI で検出。
+  - TypeScript プラグイン (`@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser`) を有効化。
+  - CI で `eslint . --ext .ts,.tsx` を実行し、コード品質を維持する。
+- **Formatter**: Prettier を使用し、コードスタイルを統一する。
+  - `prettier-plugin-tailwindcss` を併用し、Tailwind クラス名を公式推奨順でソート。
+  - `.prettierrc` でインデント・クォート・セミコロンなどのルールを定義。
+  - `eslint-config-prettier` を導入し、ESLint とのルール競合を回避する。
+  - エディタで保存時に自動フォーマットを推奨 (`.vscode/settings.json` で設定)。
+- **代替オプション**: Biome (旧 Rome) や dprint も選択肢だが、Next.js 公式エコシステムとの統合を優先し ESLint + Prettier を推奨。
+
 ### スタイリング
 
 - 一貫したカラーパレットを持つTailwind CSS

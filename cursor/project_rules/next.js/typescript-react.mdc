@@ -123,6 +123,18 @@ src/
 - **README.md**: 各メインディレクトリにはREADME.mdファイルを含める必要がある
 - **言語サポート**: README.mdファイルの英語版と中国語版の両方を提供する
 
+## Linter / Formatter
+
+- **Linter**: ESLint を使用し、公式 Next.js 推奨の `eslint-config-next` を適用する。
+  - TypeScript プラグイン (`@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser`) を有効化。
+  - React 用プラグイン (`eslint-plugin-react`, `eslint-plugin-react-hooks`) でフック・コンポーネントルールを強制。
+  - CI で `eslint . --ext .ts,.tsx` を実行し、コード品質を維持する。
+- **Formatter**: Prettier を使用し、コードスタイルを統一する。
+  - `.prettierrc` でインデント・クォート・セミコロンなどのルールを定義。
+  - `eslint-config-prettier` を導入し、ESLint とのルール競合を回避する。
+  - エディタで保存時に自動フォーマットを推奨 (`.vscode/settings.json` で設定)。
+- **代替オプション**: Biome (旧 Rome) や dprint も選択肢だが、Next.js 公式エコシステムとの統合を優先し ESLint + Prettier を推奨。
+
 ## 追加の指示事項
 
 1. JSXを含むファイルには`.tsx`拡張子を使用する

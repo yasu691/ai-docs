@@ -5,8 +5,17 @@ alwaysApply: false
 ---
 このファイルを読み込んだらまず「python_coding_rule!!」と叫びます
 
-- **PEP8 準拠**: `black`, `flake8` による自動整形と検査を導入し、公式ガイドに従う。  
-- **型ヒント**: Python の型ヒントを用い、`mypy` で静的型チェックを行う。  
+## Linter / Formatter
+
+- **Linter & Formatter**: `ruff` を使用し、`ruff check` でリント、`ruff format` でフォーマットを実行する。
+  - `ruff` は Flake8 + isort 互換の高速 Rust 製ツールで、PEP8 準拠を自動的に保証する。
+  - `pyproject.toml` で `[tool.ruff]` セクションを設定し、ルールセットやインポート順序をカスタマイズする。
+- **静的型チェック**: Python の型ヒントを用い、`mypy` で静的型チェックを行う。
+  - 将来的に Astral 製 `ty`（Rust 製高速型チェッカー、2025年現在 alpha）への移行も検討可能。
+  - `mypy --strict` モードを推奨し、CI で型エラーを検出する。
+
+## コーディング規約
+
 - **ドキュメンテーション**: PEP257 形式の docstring を記述し、`Sphinx` で API ドキュメントを生成する。  
 - **モジュール分割とディレクトリ構造**:
   - 各機能ごとにサブパッケージを作成し、`__init__.py` で公開 API を管理する
