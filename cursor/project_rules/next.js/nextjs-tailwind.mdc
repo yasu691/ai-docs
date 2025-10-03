@@ -1,5 +1,5 @@
 ---
-description: 'Next.js + Tailwind開発標準とガイドライン'
+description: 'Next.js + Tailwind CSS プロジェクトで .tsx/.ts/.jsx/.js/.css に適用するスタイリング & 開発ガイド'
 applyTo: '**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css'
 ---
 

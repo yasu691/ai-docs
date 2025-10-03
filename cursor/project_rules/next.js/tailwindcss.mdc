@@ -1,4 +1,5 @@
 ---
+description: 'Tailwind CSS 設定・ユーティリティ・コンポーネントに適用するスタイルガイド & ベストプラクティス'
 applyTo: "**/*.css,**/*.tsx,**/*.jsx,tailwind.config.js,tailwind.config.ts"
 ---
 
